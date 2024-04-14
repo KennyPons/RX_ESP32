@@ -6,7 +6,7 @@
 Estado estadoActual = APAGADO;  // Estado inicial apagado
 
 
-int tiempo = 0, Spannung = 0; int* indexReleNow; 
+int tiempo = 0, Spannung = 0, indexReleNow[2];
 bool preActivo = false;
 String comando = "";
 ToolsRX _toolRx;
@@ -82,7 +82,7 @@ void Operation_Vorbereiten() {  //PRE - SECOND OPERATION
 
   if(Spannung !=0 ){
     /*Turn On the First Rele*/
-    indexReleNow = _toolRx.IndexAuswahlenKv(Spannung);//obtiene con el valor deseado el voltaje de entrada
+    _toolRx.IndexAuswahlenKv(Spannung, indexReleNow);//obtiene con el valor deseado el voltaje de entrada
     OnlyActivateRelais(indexReleNow[0],'a');
   }else{
     EnableError();
@@ -151,7 +151,13 @@ void selectOperation(Estado statusNow){
   }
 }
 
-void FilamentWechseln(){
+void FilamentWechseln(){// Making 
+  comando = getDataSerial();
 
+  if(comando.equalsIgnoreCase("LARGE")){
+    inLARGE();
+  }else{
+    inSMALL();
+  }
   estadoActual = ENCENDIDO;
 }

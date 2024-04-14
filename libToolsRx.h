@@ -8,21 +8,22 @@ private:
   static const int volBLength = 6;
   int gpVoltageA[volALength] = { 0, 6, 12, 18, 24, 30 }; //0  a 5 index
   int gpVoltageB[volBLength] = { 36, 90, 130, 170, 210, 250 }; // 0 a 5 = index + 6
-
+  
 public:
   ToolsRX() { // Corregido el nombre del constructor a ToolsRX
-    diferenciaMinima = 99999;
+    //diferenciaMinima = 99999;
   }
   
 
-  int* IndexAuswahlenKv(int valorDeseado) {
-    static int selectedRelays[2];  // Array para almacenar los índices de los relés seleccionados
-
+ void IndexAuswahlenKv(int valorDeseado, int selectedRelays[]){
+    
+    
     int indiceA = -1;
     int indiceB = -1;
-    if(valorDeseado == 0){
-      Serial.print("Aqui hay un error el valor esta en 0 o = "+String(valorDeseado));
-    }
+    diferenciaMinima = 99999; // Reiniciar diferenciaMinima a su valor inicial
+
+
+
     // Calcular las restas y encontrar el resultado más cercano al valor deseado
     for (int i = 0; i < volALength; i++) {
       for (int j = 0; j < volBLength; j++) {
@@ -38,10 +39,11 @@ public:
       }
     }
 
+
     selectedRelays[0] = indiceA;
     selectedRelays[1] = indiceB;
-
-    return selectedRelays;
+    String mensajeError = "Linea 12 observando el primer indice rele -> " + String(selectedRelays[0]) +" IndiceB puro = "+String(indiceB);
+    Serial.println(mensajeError);
   }
 
   int ZeitErhalten(String zeit) {//enviar mAs para el tiempo de toma
